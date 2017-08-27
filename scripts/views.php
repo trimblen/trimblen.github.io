@@ -41,12 +41,12 @@
                     else {
                         
                         echo "<tr>";
-                        //временная затычка
-                        $print_value = iconv("utf-8","windows-1251", $value); 
+                        //РІСЂРµРјРµРЅРЅР°СЏ Р·Р°С‚С‹С‡РєР°
+                       // $print_value = iconv("utf-8","windows-1251", $value); 
                     
                         echo "<td> $key </td>";
                         
-                        echo "<td> $print_value </td>";
+                        echo "<td> $value </td>";
                               
                         // $print_value<br />\n";
                         
@@ -108,12 +108,12 @@
                         echo '<table border="5">';
                         
                         echo "<tr>";
-                        //временная затычка
-                        $print_value = iconv("utf-8","windows-1251", $value); 
+                        //РІСЂРµРјРµРЅРЅР°СЏ Р·Р°С‚С‹С‡РєР°
+                       // $print_value = iconv("utf-8","windows-1251", $value); 
                     
                         echo "<td> $key </td>";
                                     
-                        echo "<td> $print_value </td>";
+                        echo "<td> $value </td>";
                               
                         // $print_value<br />\n";
                         
@@ -175,12 +175,12 @@
                     }  else {
                     
                         echo "<tr>";
-                        //временная затычка
-                        $print_value = iconv("utf-8","windows-1251", $value); 
+                        //РІСЂРµРјРµРЅРЅР°СЏ Р·Р°С‚С‹С‡РєР°
+                       // $print_value = iconv("utf-8","windows-1251", $value); 
                     
                         echo "<td> $key </td>";
                         
-                        echo "<td> $print_value </td>";
+                        echo "<td> $value </td>";
                               
                         // $print_value<br />\n";
                         

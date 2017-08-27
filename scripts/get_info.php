@@ -5,7 +5,7 @@
 
 <head>
     
-    <title>Форма получения данных из онлайн игры The Tale</title>
+    <title>Р¤РѕСЂРјР° РїРѕР»СѓС‡РµРЅРёСЏ РґР°РЅРЅС‹С… РёР· РѕРЅР»Р°Р№РЅ РёРіСЂС‹ The Tale</title>
 
 </head>
 	
@@ -41,7 +41,7 @@
              
               if ($this -> selected_info_type == "heroes") {
                   
-                    echo "Игроки: ";
+                    echo "РРіСЂРѕРєРё: ";
 		
                     echo "<br/>"; 
 
@@ -59,13 +59,13 @@
                     
                     echo "<br/>";
               
-                    echo "Тип информации: ";  
+                    echo "РўРёРї РёРЅС„РѕСЂРјР°С†РёРё: ";  
                       
                     echo "<br/>";
           
                     echo "<br/>";
           
-                    echo "Информация об игроках";  
+                    echo "РРЅС„РѕСЂРјР°С†РёСЏ РѕР± РёРіСЂРѕРєР°С…";  
                   
                                               
             
@@ -76,7 +76,7 @@
           
                       echo "<br/>";
               
-                      echo "Тип информации: ";  
+                      echo "РўРёРї РёРЅС„РѕСЂРјР°С†РёРё: ";  
                       
                       echo "<br/>";
                   
@@ -84,7 +84,7 @@
                   
                       echo "<br/>";
           
-                      echo "Города";          		
+                      echo "Р“РѕСЂРѕРґР°";          		
 
                                        
                    
@@ -93,7 +93,7 @@
               if ($this -> selected_info_type == "masters"){
                   
                   
-                      echo "Мастера: ";
+                      echo "РњР°СЃС‚РµСЂР°: ";
 		
                       echo "<br/>"; 
 
@@ -112,14 +112,14 @@
                       
                       echo "<br/>";
               
-                      echo "Тип информации: ";  
+                      echo "РўРёРї РёРЅС„РѕСЂРјР°С†РёРё: ";  
                       
                       echo "<br/>";
                   
             
                       echo "<br/>";
            
-                      echo "Мастера";      
+                      echo "РњР°СЃС‚РµСЂР°";      
       
                 
               }
@@ -199,7 +199,7 @@
 		
 	     <br/>
 	
-	     <input type="button" value="Назад..." onclick="window.location.href='/index.html'">
+	     <input type="button" value="РќР°Р·Р°Рґ..." onclick="window.location.href='/index.html'">
 
 	</body>
 
