@@ -21,16 +21,16 @@
   			curl_setopt($curl, CURLOPT_HEADER, 0);				
   			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
           
-	
- 			$data    = curl_exec($curl);          
-            $res_arr = json_decode($data, true);
+            	
+ 			$data       = curl_exec($curl);  
 
-   			
-			echo "<br/>"; 
-
-  	     	curl_close($curl);                        
-
-			return $res_arr;
+            //echo $data;             
+			            
+  	     	curl_close($curl);      
+            
+            $res_data   = json_decode($data, true);
+            
+			return $res_data;
 
 		}	 
 

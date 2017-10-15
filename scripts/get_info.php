@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
 <html lang="ru">
-<meta http-equiv="content-type" content="text/html; charset="UTF-8">
+
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
 <head>
     
@@ -9,7 +10,48 @@
 
 </head>
 	
-	<body> 
+	<body>
+	
+		<style>
+		
+			.treeHTML {
+			  line-height: normal;
+			}
+			.treeHTML details {
+			  display: block;
+			}
+			.treeHTML div {
+			  position: relative;
+			  margin: 0 0 0 .5em;
+			  padding: 0 0 0 1.2em;
+			}
+			.treeHTML div:not(:last-child) { 
+			  border-left: 1px solid #ccc;
+			}
+			.treeHTML div:before { 
+			  content: "";
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  width: 1.1em;
+			  height: .5em;
+			  border-bottom: 1px solid #ccc;
+			}
+			.treeHTML div:last-child:before { 
+			  border-left: 1px solid #ccc;
+			}
+			.treeHTML summary { 
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  cursor: pointer;
+			}
+			.treeHTML details[open] summary { 
+			  outline: none;
+			}
+				
+		</style>
+	
 		<?php
                
        
@@ -28,8 +70,9 @@
             function __construct( $player_log, $info_t) {
                                             
                             
-                $this -> ids       = $player_log;                            
-                $this -> selected_info_type = $info_t;     
+                $this -> ids       = $player_log;    
+									
+                $this -> selected_info_type = $info_t; 		
                    
                 $this -> printcredetials();
                 
@@ -135,7 +178,7 @@
                   
              if ($this -> selected_info_type == "heroes") {
                                 
-                $current_url    = "http://the-tale.org/accounts/<player>/api/show?api_version=1.0&api_client=aaa-1";     
+                $current_url    = "http://the-tale.org/game/api/info?api_version=1.5&api_client=1-0.3.22&account=<account_id>";     
                 $getuserinfo    = new GetPlayersInfoController();                 
                 $ids_arr        = $this -> ids;      
                 
@@ -145,12 +188,13 @@
             
               } 
               
-              if ($this -> selected_info_type == "places"){
-                      
-                $current_url   = "http://the-tale.org/game/places/$player_login/api/list?api_version=1.1&api_client=1-0.3.22"; 
-                $getplacesinfo = new GetPlacesInfoController();
+              if ($this -> selected_info_type == "places"){                 
+				 
+                $current_url    = "http://the-tale.org/game/places/api/list?api_version=1.1&api_client=1-0.3.22"; 
+                $getplacesinfo  = new GetPlacesInfoController();
+				$ids_arr        = $this -> ids;  
                 
-                $getplacesinfo -> GetArrayToParse($current_url); 
+                $getplacesinfo -> GetArrayToParse($current_url, $ids_arr); 
                 
                 unset($getplacesinfo);                 
                         
@@ -159,7 +203,7 @@
 
               if ($this -> selected_info_type == "masters"){
                 
-                $current_url   = "http://the-tale.org/game/persons/<masters>/api/show?api_version=1.0&api_client=aaa-1";                        
+                $current_url    = "http://the-tale.org/game/persons/<masters>/api/show?api_version=1.1&api_client=1-0.3.22";                        
                 $getmastersinfo = new GetMastersInfoController();
                 $ids_arr        = $this -> ids;   
                 
@@ -182,13 +226,18 @@
         
     
 	}
-
-    
-    
-  	
-        $pl_id         = $_POST['selectID'];
-        $info_sel_type = $_POST["info_type"];
-       
+      	if (empty($_POST['selectID'])){
+			
+			$pl_id	= NULL;
+			
+		}else {
+			
+			$pl_id	= $_POST['selectID'];
+			
+		}		
+							
+        $info_sel_type	= $_POST["info_type"];
+            
 		$credentials  = new RouterGetinfo($pl_id, $info_sel_type);
         
        	$credentials  -> WriteGatheredInfo();
