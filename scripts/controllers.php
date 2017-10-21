@@ -47,11 +47,9 @@
                                                 
                         
                         $Curlget            = new DataModelGetInfoByURL();  
-                        $ShowInformation    = new  PlayersInfoUpdater();                                   
+                        $ShowInformation    = new  PlayersInfoUpdater();                              
       
-						$ShowInformation ->	WriteTableHeader();	
-                        
-						$array_of_hero_info = array();       
+                        $array_of_hero_info = array();       
                         
                         foreach ($array_of_ids as $key => $value){
                                             
@@ -60,7 +58,7 @@
 														
                             $player_array = $ShowInformation -> CreateInfoArray($arrCurlget);  
 							
-                            if (count($player_array) > 0)   {
+                            if (isset($player_array['player_name'])&& $player_array['player_name'] <>"-")   {
                             
                                 array_push($array_of_hero_info,  $player_array);
 						
@@ -68,19 +66,30 @@
                                                     
                         }  
     	
-						
-						for($i = 0; $i < count($array_of_hero_info); $i++) {
-						
-							$ShowInformation ->	WriteInfo($array_of_hero_info[$i]);
-														
-						}
-                        
-                        $ShowInformation ->	WriteTableFooter();							
-                       
-                       unset($Curlget); 
+                        if (count($array_of_hero_info) > 0) {
                             
-                       unset($ShowInformation); 
-                       
+                            $ShowInformation ->	WriteTableHeader();	
+						
+                            for($i = 0; $i < count($array_of_hero_info); $i++) {
+                            
+                                $ShowInformation ->	WriteInfo($array_of_hero_info[$i]);
+                                                            
+                            }
+                            
+                            $ShowInformation ->	WriteTableFooter();							
+                           
+                           unset($Curlget); 
+                                
+                           unset($ShowInformation); 
+                           
+                        } else{
+                            
+                            
+                           echo "<h1>NO HEROES DATA IS AVAIABLE.</h1>"; 
+                            
+                             
+                        }   
+                           
                        
                     }
                     
@@ -127,21 +136,33 @@
 						
 						$array_of_places_info  = $ShowInformation -> PrepareArrayWhenHasNoIds($arrCurlget);  
 												
-						$ShowInformation ->	WriteTableHeader();	
-                        
-		                for($i = 0; $i < count($array_of_places_info); $i++) {
+						
+                                               
+                        if (count($array_of_places_info)>0) {
                             
-                            $tmp_url                  = "http://the-tale.org/game/places/{$array_of_places_info[$i]['place_id']}/api/show?api_version=2&api_client=1-0.3.22";
+                            $ShowInformation ->	WriteTableHeader();	
                             
-                            $arr_pl_add_info          = $Curlget -> getinformation($tmp_url); 
-                                                   
-                            $array_for_print = $ShowInformation ->  ParseAdditionalInfo($arr_pl_add_info, $array_of_places_info[$i]);
-                  						
-							$ShowInformation ->	WriteInfo($array_for_print);
+                            for($i = 0; $i < count($array_of_places_info); $i++) {
+                            
+                                $tmp_url                  = "http://the-tale.org/game/places/{$array_of_places_info[$i]['place_id']}/api/show?api_version=2&api_client=1-0.3.22";
+                                
+                                $arr_pl_add_info          = $Curlget -> getinformation($tmp_url); 
+                                                       
+                                $array_for_print = $ShowInformation ->  ParseAdditionalInfo($arr_pl_add_info, $array_of_places_info[$i]);
+                                            
+                                $ShowInformation ->	WriteInfo($array_for_print);
 														
-						}
-																
-						$ShowInformation ->	WriteTableFooter();		
+                            }
+                        
+                            $ShowInformation ->	WriteTableFooter();		
+                            
+                        } else{
+                            
+                            echo "<h1>NO PLACES DATA IS AVAIABLE.</h1>";  
+                                                         
+                        }
+                        
+
 						
                         unset($Curlget);
                         unset($ShowInformation);  						
@@ -156,9 +177,7 @@
                         $array_of_places_info        = array();
                          
                         $base_url        = "http://the-tale.org/game/places/<place>/api/show?api_version=2&api_client=1-0.3.22";  
-
-                        $ShowInformation ->	WriteTableHeader();	    
-
+         
                         foreach ($array_of_ids as $key => $value){
                                             
                             $correct_url    =  str_replace("<place>", $value, $base_url);   
@@ -167,7 +186,7 @@
 
                             $place_array    = $ShowInformation -> CreateInfoArray($arrCurlget);    
                            
-                            if (count($place_array ) > 0)   {
+                            if (isset($place_array['place_id']) && $place_array['place_id']<>"-")   {
                             
                                 array_push($array_of_places_info,  $place_array);
 						
@@ -175,13 +194,24 @@
                
                         }  
                         
-                       	for($i = 0; $i < count($array_of_places_info); $i++) {
+                        if (count($array_of_places_info)>0) {
+                            
+                             $ShowInformation ->	WriteTableHeader();	 
+                            
+                            for($i = 0; $i < count($array_of_places_info); $i++) {
 						
-							$ShowInformation ->	WriteInfo($array_of_places_info[$i]);
+                                $ShowInformation ->	WriteInfo($array_of_places_info[$i]);
 														
-                        } 
-                       
-                       $ShowInformation ->	WriteTableFooter();	
+                            } 
+                        
+                             $ShowInformation ->	WriteTableFooter();	
+                            
+                        } else{
+                            
+                            echo "<h1>NO PLACES DATA IS AVAIABLE.</h1>";  
+                                                         
+                        }
+                   
                         
                        unset($Curlget); 
                         
@@ -236,9 +266,7 @@
                             
                         $Curlget                = new DataModelGetInfoByURL();  
                         $ShowInformation        = new MastersInformationUpdater();  
-                        
-                        $ShowInformation ->	WriteTableHeader();	    
-                        
+                                         
                         $array_of_masters_info  = array();  
 
                         foreach ($array_of_ids as $key => $value){                            
@@ -249,7 +277,7 @@
                                                
                             $masters_array = $ShowInformation -> CreateInfoArray($arrCurlget);  
 							
-                            if (count($masters_array) > 0)   {
+                            if (isset($masters_array['master_id'])&& $masters_array['master_id']<>"-")   {
                             
                                 array_push($array_of_masters_info,  $masters_array);
                 						
@@ -257,17 +285,27 @@
                       
                                        
                         }  
-                 						
-                       for($i = 0; $i < count($array_of_masters_info); $i++) {
+                 			
+                        if (count($array_of_masters_info)>0) {                         
+                                  
+                            $ShowInformation ->	WriteTableHeader();	   
+                       
+                            for($i = 0; $i < count($array_of_masters_info); $i++) {
 						
-							$ShowInformation ->	WriteInfo($array_of_masters_info[$i]);
+                                $ShowInformation ->	WriteInfo($array_of_masters_info[$i]);
 														
-                       }
-                        
+                            }
+                           
+                            $ShowInformation ->	WriteTableFooter();	
+                       
+                       }else{
+                           
+                           echo "<h1>NO MASTERS DATA IS AVAIABLE.</h1>";                            
+                           
+                       }    
+                
                      //  var_dump($array_of_masters_info);
                         
-                       $ShowInformation ->	WriteTableFooter();	
-                       
                        unset($Curlget); 
                         
                        unset($ShowInformation); 
