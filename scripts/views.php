@@ -641,10 +641,10 @@
 				 echo "<td> Координаты города </td>"; 	
 				 echo "<td> Размер города </td>";      
 				 echo "<td> Специализация </td>";
-				 echo "<td> Политическая сила (список) </td>";
-				 echo "<td> Персоны (список) </td>";
-				 echo "<td> Атрибуты города(список) </td>";
-				 echo "<td> Итоговые атрибуты(список) </td>";
+				 echo "<td> Политическая сила, комплексное значение (список) </td>";
+				 echo "<td> Персоны - имя, профессия (список) </td>";
+				 echo "<td> Атрибуты города - эффекты, наименование, атрибут влияния, значение (список) </td>";
+				 echo "<td> Итоговые значения атрибутов - наименование, значение(список) </td>";
              
              echo '</tr>';
 			 
@@ -1291,7 +1291,7 @@
                 $spec = $this -> GetSpecialization($tr_array[place_specialization]);  
                     
 				echo "<td> $spec </td>";
-                echo "<td> inner <br> value - fraction <br> {$tr_array['place_politic_power']['power']['inner']['value']}{$sep}{$tr_array['place_politic_power']['power']['inner']['fraction']} <br> outer <br> value - fraction <br> {$tr_array['place_politic_power']['power']['outer']['value']}{$sep}{$tr_array['place_politic_power']['power']['outer']['fraction']} <br> fraction <br> {$tr_array['place_politic_power']['power']['fraction']} </td>"; 
+                echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['place_politic_power']['power']['inner']['value']} <br> Доля среди остальных городов <br> {$tr_array['place_politic_power']['power']['inner']['fraction']} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['place_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br>{$tr_array['place_politic_power']['power']['outer']['fraction']} <br> Доля общего влияния среди остальных городов: <br> {$tr_array['place_politic_power']['power']['fraction']} </td>"; 
                 
                 echo "<td> <div class='treeHTML'>";
                 
@@ -1520,7 +1520,7 @@
 				echo "<td> $tr_array[master_place] </td>";                   
 				echo "<td> $tr_array[master_building] </td>";    
 				echo "<td> $tr_array[master_updated_at] </td>"; 					
-				echo "<td> inner <br> value - fraction <br> {$tr_array['master_politic_power']['power']['inner']['value']}{$sep}{$tr_array['master_politic_power']['power']['inner']['fraction']} <br> outer <br> value - fraction <br> {$tr_array['master_politic_power']['power']['outer']['value']}{$sep}{$tr_array['master_politic_power']['power']['outer']['fraction']} <br> fraction <br> {$tr_array['master_politic_power']['power']['fraction']} </td>"; 		              
+				echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['master_politic_power']['power']['inner']['value']}<br> Доля среди остальных городов <br> {$tr_array['master_politic_power']['power']['inner']['fraction']} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['master_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br> {$tr_array['master_politic_power']['power']['outer']['fraction']} <br> Доля общего влияния среди остальных городов: <br> {$tr_array['master_politic_power']['power']['fraction']} </td>"; 		              
 				echo "<td>  $tr_array[master_job] </td>";     
                     
 			echo "</tr>";  
