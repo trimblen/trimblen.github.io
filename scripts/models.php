@@ -24,7 +24,7 @@
             	
  			$data       = curl_exec($curl);  
 
-            //echo $data;             
+           // echo $data;             
 			            
   	     	curl_close($curl);      
             

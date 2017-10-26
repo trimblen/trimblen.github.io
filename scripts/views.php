@@ -80,7 +80,7 @@
         public function CreateInfoArray($arr){
             
             static $pl_array = array(); 
-		            
+				            
 			foreach ($arr as $key => $value){
 																  
 				if (is_array($value)) {   
@@ -259,7 +259,6 @@
 					  						
 					}    
 
-                                        
                     if (isset ($value['id'])){									   
 							
 						$arr_result['player_id'] = $value['id'];      
@@ -272,8 +271,7 @@
               
                        
                 }
-				
-				
+								
 				if ((string)$key =="companion"){                       
                  
 				    if (isset ($value['name'])){						   
@@ -289,7 +287,7 @@
                  
                                
                 }
-				
+							
 				if ((string)$key =="secondary"){ 
 
 					if (isset ($value['power'])){
@@ -303,15 +301,13 @@
 						$equipment_lev = round ($summ_power/12, 0);
 						
 						$arr_result['equipment_level'] = $equipment_lev;
-							
-						$arr_result['usability_level'] = round ($equipment_lev/11, 0);	
-								
+			
 					} else {
 					
 						$arr_result['player_power'] 	= "-"; 
 						$arr_result['summary_power'] 	= "-";	
 						$arr_result['equipment_level']  = "-";							
-						$arr_result['usability_level']  = "-";	
+					
 					}  
 
 					if (isset ($value['move_speed'])){
@@ -340,7 +336,13 @@
        				
 				
 			    }
-                            
+				
+				if((string)$key =="equipment"){
+																	
+					$arr_result['player_equipment'] = $value;  
+			
+				}	
+								
                 if((string)$key =="hero"){
                    
                     if (isset ($value['position'])){
@@ -483,7 +485,24 @@
         
     }
 
-
+	private function GetUseableLevel(&$artifacts){
+		
+		static $art_count	 = 0;
+		static $usable_summ	 = 0;
+		static $us_level	 = 0;
+		
+		 for($i = 0; $i < count($artifacts); $i++){
+			 					 
+			$usable_summ = $usable_summ + $artifacts[$i]['preference_rating'];					
+			$art_count	 = $art_count + 1;	
+					 			 
+		 }
+		
+		$us_level = Round($usable_summ/$art_count,2);
+		
+		return $us_level;
+		
+	}
         
 	
     public function WriteInfo($tr_array){
@@ -494,39 +513,51 @@
 			 echo "<td> $tr_array[online_offline] </td>"; 
 			 echo "<td> $tr_array[player_companion_name] </td>"; 
 			 echo "<td> $tr_array[player_level] </td>"; 			 
-             echo "<td> <a href=\"http://the-tale.org/game/heroes/$tr_array[player_id]\"> $tr_array[player_name] </a></td>"; 
-	
-			
-			  		 
-			
-            
-            $this -> DetectGender($tr_array['player_gender'],  $tr_array['player_race']);
+             echo "<td> <a href=\"http://the-tale.org/game/heroes/$tr_array[player_id]\"> $tr_array[player_name] </a></td>"; 	
+			 $this -> DetectGender($tr_array['player_gender'],  $tr_array['player_race']);
        			 
-            echo "<td> $tr_array[player_money] </td>";
+             echo "<td> $tr_array[player_money] </td>";
 			 
-			if ($tr_array['player_alive'] == true){
+			 if ($tr_array['player_alive'] == true){
 				
-				echo "<td> Живчик </td>";	
+			    	echo "<td> Живчик </td>";	
 				 
-			}else if($tr_array['player_alive'] == false){
+			 }else if($tr_array['player_alive'] == false){
 								
-				echo "<td> Дохлятина </td>";	
+				    echo "<td> Дохлятина </td>";	
 				 
-			} else{
+			 } else{
 				 				 
-				echo "<td> -- </td>";	 
+				    echo "<td> -- </td>";	 
 				 
-			}
+			 }
              			 
-	    	 $sep 		 = "\\";		
+	    	 $sep 		 = "\\";
+			 $x_coords 	 = Round($tr_array['player_position']['x'],2);	
+			 $y_coords 	 = Round($tr_array['player_position']['y'],2);
 			 
              echo "<td>{$tr_array['player_power'][0]}{$sep}{$tr_array['player_power'][1]}</td>";
 			 echo "<td> $tr_array[summary_power] </td>";
 			 echo "<td> $tr_array[equipment_level]</td>";
              echo "<td> $tr_array[player_move_speed] </td>";
-			 echo "<td> $tr_array[usability_level] </td>";
+			 
+			 $player_us_lev = "";
+			 
+			 if (isset($tr_array['player_equipment'])){
+								
+				$player_us_lev = $this -> GetUseableLevel($tr_array['player_equipment']);	
+				 
+			 }else{
+				
+				$player_us_lev = 0;				
+				 
+			 }
+						
+			 $player_us_lev = $this -> GetUseableLevel($tr_array['player_equipment']);
+			 
+			 echo "<td> {$player_us_lev} </td>";
              echo "<td> $tr_array[player_initiative] </td>"; 										
-             echo "<td> {$tr_array['player_position']['x']}{$sep}{$tr_array['player_position']['y']}</td>";
+             echo "<td> {$x_coords}{$sep}{$y_coords}</td>";
 			 echo "<td> {$tr_array['player_might']['value']} </td>";
              echo "<td> $tr_array[player_sprite] </td>";
        
@@ -635,15 +666,13 @@
 			 
 			 echo "<tr>";   
 			 
-				 echo "<td> ID города </td>"; 
-				 echo "<td> Название города </td>"; 
+				 echo "<td> Город </td>"; 
 				 echo "<td> Фронтир </td>"; 
 				 echo "<td> Координаты города </td>"; 	
 				 echo "<td> Размер города </td>";      
 				 echo "<td> Специализация </td>";
 				 echo "<td> Политическая сила, комплексное значение (список) </td>";
-				 echo "<td> Персоны - имя, профессия (список) </td>";
-				 echo "<td> Атрибуты города - эффекты, наименование, атрибут влияния, значение (список) </td>";
+				 echo "<td> Персоны - имя, профессия (список) </td>";				
 				 echo "<td> Итоговые значения атрибутов - наименование, значение(список) </td>";
              
              echo '</tr>';
@@ -793,7 +822,8 @@
             echo "<details><summary></summary>";
             
             foreach ($array_of_persons as $key => $value){
-                
+               
+			   $prof = ""; 	
                $prof = $this -> GetProfession($value['type']);
                        
                echo "<div> $value[name] $prof </div>";                 
@@ -804,30 +834,7 @@
             
             echo "</div>";
         }
-         
-        
-        private function WriteEffectsParatemers($array_of_parameters){            
-                        
-            echo "<div> Эффекты";
-            
-            echo "<details><summary></summary>";
-            
-            foreach ($array_of_parameters as $key => $value){  
-                
-                $sep = "->";
-                
-                $attr = $this -> GetPlaceAttribute($value['attribute']);               
-                       
-            echo "<div> $value[name] $prof {$sep}  $attr {$sep}  $value[value] </div>";                 
-                
-            }
-            
-            echo "</details>";
-            
-            echo "</div>";          
-            
-            
-        }  
+               
 
 
         private function WriteAttributesParatemers($array_of_attributes){            
@@ -838,11 +845,11 @@
                       
             foreach ($array_of_attributes as $key => $value){  
             
-                $sep = "->";
-                
+                $sep  = "->";
+                $attr = "";
                 $attr = $this -> GetPlaceAttribute($value['id']);               
                        
-                echo "<div> $attr {$sep} $value[value] </div>";                 
+                echo "<div> {$attr} {$sep} {$value['value']} </div>";                 
                 
             }
             
@@ -1269,10 +1276,8 @@
         public function WriteInfo($tr_array)    {            
                         
           	echo "<tr>"; 
-	  
-				echo "<td> $tr_array[place_id] </td>"; 
-				echo "<td> $tr_array[place_name] </td>";  
-				
+	  	
+				echo "<td> <a href=\"http://the-tale.org/game/places/$tr_array[place_id]\"> $tr_array[place_name] </a></td>"; 	
 				$sep 		 = "\\";
 				
 				if ($tr_array['place_frontier'] == true){
@@ -1287,27 +1292,25 @@
 				
 				echo "<td> {$tr_array['place_position']['x']}{$sep}{$tr_array['place_position']['y']} </td>";                   
 				echo "<td> $tr_array[place_size] </td>";   
-        
-                $spec = $this -> GetSpecialization($tr_array[place_specialization]);  
-                    
-				echo "<td> $spec </td>";
-                echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['place_politic_power']['power']['inner']['value']} <br> Доля среди остальных городов <br> {$tr_array['place_politic_power']['power']['inner']['fraction']} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['place_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br>{$tr_array['place_politic_power']['power']['outer']['fraction']} <br> Доля общего влияния среди остальных городов: <br> {$tr_array['place_politic_power']['power']['fraction']} </td>"; 
+					
+				$spec = "";	
+                $spec = $this -> GetSpecialization($tr_array['place_specialization']);  
+                $power_in_other_places 	 = Round($tr_array['place_politic_power']['power']['inner']['fraction']*100,3)."%";
+				$power_out_other_places  = Round($tr_array['place_politic_power']['power']['outer']['fraction']*100,3)."%";
+				$power_all_other_places  = Round($tr_array['place_politic_power']['power']['fraction']*100,3)."%";
+					
+				echo "<td> {$spec} </td>";
+                echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['place_politic_power']['power']['inner']['value']} <br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['place_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br>{$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 
                 
                 echo "<td> <div class='treeHTML'>";
                 
-                    $this -> WritePersonsList($tr_array[place_persons]);
+                    $this -> WritePersonsList($tr_array['place_persons']);
                 
                 echo "</div></td> ";
-                
+                               
                 echo "<td> <div class='treeHTML'>";
                 
-                    $this -> WriteEffectsParatemers($tr_array[place_attributes][effects]);
-                
-                echo "</div></td> ";
-                
-                echo "<td> <div class='treeHTML'>";
-                
-                    $this -> WriteAttributesParatemers($tr_array[place_attributes][attributes]);
+                    $this -> WriteAttributesParatemers($tr_array['place_attributes']['attributes']);
                 
                 echo "</div></td> ";
 				
@@ -1347,8 +1350,7 @@
              
 				 echo "<td> Мастер </td>"; 			
 				 echo "<td> Город </td>"; 
-				 echo "<td> Домик </td>"; 	
-				 echo "<td> Дата последнего обновления </td>"; 	
+				 echo "<td> Домик </td>"; 				
 				 echo "<td> Влияние </td>";      
 				 echo "<td> Проект </td>";
                     
@@ -1402,13 +1404,11 @@
                         
                         if (isset($value['id'])){
 
-                              $arr_result['master_id'] = $value['id']; 
-                              
-                        //      echo  $value['id'];  
-                           
+                          $arr_result['master_id'] = $value['id']; 
+                                                
                         }else{
                                
-                              $arr_result['master_id'] = "-"; 
+                          $arr_result['master_id'] = "-"; 
                                
                         } 
                    
@@ -1416,33 +1416,15 @@
 
                           $arr_result['master_name'] = $value['name'];
 
-                       //   echo  $value['name'];     
-                       
                        }else {
                            
                           $arr_result['master_name'] = "-"; 
                            
                        } 
-                       
-                       if (isset($value['updated_at'])){
-                           
-                          $last_visit    = date('m/d/Y H:i:s', $value['updated_at']);  
-                
-                          $arr_result['master_updated_at'] = $last_visit;                          
-
-                      //    echo  $last_visit;     
-                       
-                       }else {
-                           
-                          $arr_result['master_updated_at'] = "-"; 
-                           
-                       } 
-                       
+                                                         
                        if (isset($value['building'])){
 
                           $arr_result['master_building'] = "YES";
-
-                      //    echo  $arr_result['master_building'];     
                        
                        }else {
                            
@@ -1452,21 +1434,19 @@
                        
                        if (isset($value['place'])){
 
-                          $arr_result['master_place'] = $value['place']['name'];
-
-                   //       echo  $value['place']['name'];     
-                       
+                          $arr_result['master_place_name'] = $value['place']['name'];
+						  $arr_result['master_place_id']   = $value['place']['id'];
+                          
                        }else {
                            
-                         $arr_result['master_place'] = "-"; 
+                          $arr_result['master_place_name'] = "-";
+						  $arr_result['master_place_id']   = "-";
                            
                        } 
                        
                        if (isset($value['politic_power'])){
 
                           $arr_result['master_politic_power'] = $value['politic_power'];
-
-                    //      echo  $value['politic_power'];     
                        
                        }else {
                            
@@ -1477,15 +1457,13 @@
                        if (isset($value['job'])){
 
                           $arr_result['master_job'] = $value['job']['name'];
-
-                     //     echo  $value['job']['name'];     
-                       
+                         
                        }else {
                            
                          $arr_result['master_job'] = "-"; 
                            
                        } 
-   
+		   
                 }
   
                              
@@ -1514,13 +1492,15 @@
                         
 			echo "<tr>"; 
                 
-                $sep 		 = "\\";
-                
+                $sep 					 = "\\";
+                $power_in_other_places 	 = Round($tr_array['master_politic_power']['power']['inner']['fraction']*100,3)."%";
+				$power_out_other_places  = Round($tr_array['master_politic_power']['power']['outer']['fraction']*100,3)."%";
+				$power_all_other_places  = Round($tr_array['master_politic_power']['power']['fraction']*100,3)."%";
+				
 				echo "<td> <a href=\"http://the-tale.org/game/persons/$tr_array[master_id]\"> $tr_array[master_name] </a></td>"; 			 
-				echo "<td> $tr_array[master_place] </td>";                   
-				echo "<td> $tr_array[master_building] </td>";    
-				echo "<td> $tr_array[master_updated_at] </td>"; 					
-				echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['master_politic_power']['power']['inner']['value']}<br> Доля среди остальных городов <br> {$tr_array['master_politic_power']['power']['inner']['fraction']} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['master_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br> {$tr_array['master_politic_power']['power']['outer']['fraction']} <br> Доля общего влияния среди остальных городов: <br> {$tr_array['master_politic_power']['power']['fraction']} </td>"; 		              
+				echo "<td> <a href=\"http://the-tale.org/game/places/$tr_array[master_place_id]\"> $tr_array[master_place_name] </a></td>"; 			             
+				echo "<td> $tr_array[master_building] </td>";  							
+				echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['master_politic_power']['power']['inner']['value']}<br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['master_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br> {$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 		              
 				echo "<td>  $tr_array[master_job] </td>";     
                     
 			echo "</tr>";  
