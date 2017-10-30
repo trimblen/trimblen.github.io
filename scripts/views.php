@@ -94,7 +94,7 @@
 				} else {
 					  
 					  
-					$this->TraceArraySubPack($value, $key, $pl_array);                            
+					//$this->TraceArraySubPack($value, $key, $pl_array);                            
 													  
 										   
 				}                
@@ -814,7 +814,7 @@
 
         }    
         
-         
+		        
         private function WritePersonsList($array_of_persons){
            
             echo "<div> Персоны";
@@ -1292,15 +1292,18 @@
 				
 				echo "<td> {$tr_array['place_position']['x']}{$sep}{$tr_array['place_position']['y']} </td>";                   
 				echo "<td> $tr_array[place_size] </td>";   
-					
-				$spec = "";	
-                $spec = $this -> GetSpecialization($tr_array['place_specialization']);  
+							
+                $spec = $this -> GetSpecialization($tr_array['place_specialization']); 
+				
+				$power_nearest_area		 = Round($tr_array['place_politic_power']['power']['inner']['value'],2);
+				$power_summ_crowd	     = Round($tr_array['place_politic_power']['power']['outer']['value'],2);	
                 $power_in_other_places 	 = Round($tr_array['place_politic_power']['power']['inner']['fraction']*100,3)."%";
 				$power_out_other_places  = Round($tr_array['place_politic_power']['power']['outer']['fraction']*100,3)."%";
 				$power_all_other_places  = Round($tr_array['place_politic_power']['power']['fraction']*100,3)."%";
 					
 				echo "<td> {$spec} </td>";
-                echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['place_politic_power']['power']['inner']['value']} <br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['place_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br>{$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 
+				
+                echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$power_nearest_area} <br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$power_summ_crowd}<br> Доля среди остальных городов<br>{$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 
                 
                 echo "<td> <div class='treeHTML'>";
                 
@@ -1493,6 +1496,8 @@
 			echo "<tr>"; 
                 
                 $sep 					 = "\\";
+				$power_nearest_area		 = Round($tr_array['master_politic_power']['power']['inner']['value'],2);
+				$power_summ_crowd	     = Round($tr_array['master_politic_power']['power']['outer']['value'],2);
                 $power_in_other_places 	 = Round($tr_array['master_politic_power']['power']['inner']['fraction']*100,3)."%";
 				$power_out_other_places  = Round($tr_array['master_politic_power']['power']['outer']['fraction']*100,3)."%";
 				$power_all_other_places  = Round($tr_array['master_politic_power']['power']['fraction']*100,3)."%";
@@ -1500,7 +1505,7 @@
 				echo "<td> <a href=\"http://the-tale.org/game/persons/$tr_array[master_id]\"> $tr_array[master_name] </a></td>"; 			 
 				echo "<td> <a href=\"http://the-tale.org/game/places/$tr_array[master_place_id]\"> $tr_array[master_place_name] </a></td>"; 			             
 				echo "<td> $tr_array[master_building] </td>";  							
-				echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$tr_array['master_politic_power']['power']['inner']['value']}<br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$tr_array['master_politic_power']['power']['outer']['value']}<br> Доля среди остальных городов<br> {$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 		              
+				echo "<td> Внутреннее влияние: <br> Суммарное влияние ближнего круга <br> {$power_nearest_area}<br> Доля среди остальных городов <br> {$power_in_other_places} <br> Внешнее влияние: <br> Суммарное влияние толпы <br> {$power_summ_crowd}<br> Доля среди остальных городов<br> {$power_out_other_places} <br> Доля общего влияния среди остальных городов: <br> {$power_all_other_places} </td>"; 		              
 				echo "<td>  $tr_array[master_job] </td>";     
                     
 			echo "</tr>";  

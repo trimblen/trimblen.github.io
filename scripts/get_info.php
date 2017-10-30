@@ -234,7 +234,7 @@
 			
 			$pl_id	= $_POST['selectID'];
 			
-		}		
+		}	
 							
         $info_sel_type	= $_POST["info_type"];
             

@@ -52,13 +52,13 @@
                         $array_of_hero_info = array();       
                         
                         foreach ($array_of_ids as $key => $value){
-                                            
+												
                             $repl_url       = str_replace("<account_id>", $value, $url);                           
                             $arrCurlget     = $Curlget -> getinformation($repl_url);   
 														
                             $player_array = $ShowInformation -> CreateInfoArray($arrCurlget);  
-							
-                            if (isset($player_array['player_name'])&& $player_array['player_name'] <>"-")   {
+													
+                            if (isset($player_array['player_id']) && $player_array['player_id'] == $value)   {
                             
                                 array_push($array_of_hero_info,  $player_array);
 						
@@ -125,8 +125,7 @@
             public function GetArrayToParse($url, $array_of_ids = null){
                 
                                     
-                    if ($array_of_ids == null)  {
-                                               
+                    if ($array_of_ids == null)  {                                               
                                                          
                         $Curlget         = new DataModelGetInfoByURL();     
                         
@@ -134,9 +133,7 @@
                         
                         $ShowInformation = new  PlacesInformationUpdater();
 						
-						$array_of_places_info  = $ShowInformation -> PrepareArrayWhenHasNoIds($arrCurlget);  
-												
-						
+						$array_of_places_info  = $ShowInformation -> PrepareArrayWhenHasNoIds($arrCurlget);						
                                                
                         if (count($array_of_places_info)>0) {
                             
@@ -161,9 +158,7 @@
                             echo "<h1>NO PLACES DATA IS AVAIABLE.</h1>";  
                                                          
                         }
-                        
-
-						
+                        						
                         unset($Curlget);
                         unset($ShowInformation);  						
 
@@ -173,36 +168,29 @@
                                                 
                         
                         $Curlget                     = new DataModelGetInfoByURL();  
-                        $ShowInformation             = new PlacesInformationUpdater();                          
-                        $array_of_places_info        = array();
-                         
-                        $base_url        = "http://the-tale.org/game/places/<place>/api/show?api_version=2&api_client=1-0.3.22";  
-         
-                        foreach ($array_of_ids as $key => $value){
-                                            
-                            $correct_url    =  str_replace("<place>", $value, $base_url);   
-                            
-                            $arrCurlget     = $Curlget -> getinformation($correct_url);  
-
-                            $place_array    = $ShowInformation -> CreateInfoArray($arrCurlget);    
-                           
-                            if (isset($place_array['place_id']) && $place_array['place_id']<>"-")   {
-                            
-                                array_push($array_of_places_info,  $place_array);
-						
-                            }                        
-               
-                        }  
+                        $ShowInformation             = new PlacesInformationUpdater(); 											
+						$arrCurlget    		   = $Curlget -> getinformation($url);           
+                     	$array_of_places_info  = $ShowInformation -> PrepareArrayWhenHasNoIds($arrCurlget);  
                         
                         if (count($array_of_places_info)>0) {
                             
                              $ShowInformation ->	WriteTableHeader();	 
-                            
-                            for($i = 0; $i < count($array_of_places_info); $i++) {
-						
-                                $ShowInformation ->	WriteInfo($array_of_places_info[$i]);
-														
-                            } 
+                             
+								for($i = 0; $i < count($array_of_places_info); $i++) {
+									
+									if (in_array($array_of_places_info[$i]['place_id'], $array_of_ids)){
+									
+									$tmp_url                  = "http://the-tale.org/game/places/{$array_of_places_info[$i]['place_id']}/api/show?api_version=2&api_client=1-0.3.22";
+                                
+									$arr_pl_add_info          = $Curlget -> getinformation($tmp_url); 
+                                                       
+									$array_for_print = $ShowInformation ->  ParseAdditionalInfo($arr_pl_add_info, $array_of_places_info[$i]);
+                                            
+									$ShowInformation ->	WriteInfo($array_for_print);
+
+									}	
+									
+								}						   
                         
                              $ShowInformation ->	WriteTableFooter();	
                             
@@ -269,9 +257,8 @@
                                          
                         $array_of_masters_info  = array();  
 
-                        foreach ($array_of_ids as $key => $value){                            
-                            
-                
+                        foreach ($array_of_ids as $key => $value){                          
+                            							
                             $repl_url            = str_replace("<masters>", $value , $url);                                 
                             $arrCurlget          = $Curlget -> getinformation($repl_url);   
                                                
